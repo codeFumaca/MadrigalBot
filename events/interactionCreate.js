@@ -1,4 +1,5 @@
-const { Events, Collection } = require('discord.js');
+const { Events, Collection, EmbedBuilder } = require('discord.js');
+const { LOG_CHANNEL } = process.env;
 
 module.exports = {
 	name: Events.InteractionCreate,
@@ -37,8 +38,17 @@ module.exports = {
 		timestamps.set(interaction.user.id, now);
 		setTimeout(() => timestamps.delete(interaction.user.id), cooldownAmount);
 
+		const embed = new EmbedBuilder()
+		.setAuthor({ name: `📜  Log` , iconURL: `${interaction.user.displayAvatarURL({ dynamic: true })}` })
+		.setDescription(`**${interaction.user.tag}** executou o comando **${interaction.commandName}**`)
+		.setTimestamp()
+		.setColor('Red')
+		.setFooter({ text: 'Direitos reservados © Flyff Madrigal' })
+
 		try {
 			await command.execute(interaction);
+			const logchannel = interaction.guild.channels.cache.get(LOG_CHANNEL);
+			await logchannel.send({ embeds: [embed]});
 		} catch (error) {
 			console.error(`Error executing ${interaction.commandName}`);
 			console.error(error);
