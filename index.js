@@ -1,6 +1,6 @@
 const fs = require('node:fs');
 const path = require('node:path');
-const { Client, Collection, Events,  GatewayIntentBits, Partials  } = require('discord.js');
+const { Client, Collection, Events,  GatewayIntentBits, Partials, EmbedBuilder  } = require('discord.js');
 
 const dotenv = require('dotenv');
 dotenv.config();
@@ -45,3 +45,6 @@ for (const file of eventFiles) {
 
 // Processo de login do Bot
 client.login(TOKEN);
+
+
+const pollschema = require('./Schemas/poll');

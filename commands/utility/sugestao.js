@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
-const dotenv = require('dotenv');
 const { SUGGESTION_CHANNEL } = process.env;
+const suggestionSchema = require('../../Schemas/suggestion')
 
 module.exports = {
     cooldown: 300,
@@ -56,9 +56,7 @@ module.exports = {
                     message.react('❌')
             })
             .catch((error) => console.error(`Erro ao enviar mensagem: ${error}`));
-        timeout.push(interaction.user.id);
-        setTimeout(() => {
-            timeout.shift();
-        }, 60000)
+
+            await suggestionSchema.create({ suggestion: sugestao, author: interaction.user })
     },
 };
