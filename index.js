@@ -45,6 +45,3 @@ for (const file of eventFiles) {
 
 // Processo de login do Bot
 client.login(TOKEN);
-
-
-const pollschema = require('./Schemas/poll');

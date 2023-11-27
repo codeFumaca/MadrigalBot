@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, PermissionsBitField } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = require('discord.js');
 const dotenv = require('dotenv');
 dotenv.config();
 const { PUNISHMENTS_CHANNEL } = process.env;
@@ -13,13 +13,11 @@ module.exports = {
                 .setRequired(true))
         .addStringOption(option =>
             option.setName('motivo')
-                .setDescription('Motivo do banimento.')),
+                .setDescription('Motivo do banimento.'))
+        .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers),
 
     async execute(interaction) {
 
-        if (!interaction.member.permissions.has(PermissionsBitField.Flags.BanMembers)) {
-            return interaction.reply({ content: 'Você não tem permissão para usar este comando.', ephemeral: true });
-        }
         const user = interaction.options.getUser('usuario');
         let motivo = interaction.options.getString('motivo');
         const canal = interaction.guild.channels.cache.get(PUNISHMENTS_CHANNEL)
@@ -48,7 +46,7 @@ module.exports = {
                     .setAuthor({ name: "❌ | Error" })
                     .setDescription(`Não foi possível banir ${user} do servidor!\n*Contate um Administrador e informe o motivo.*`)
                     .addFields(
-                        { name: 'Motivo: ', value: `${e}`, inline: true },)
+                        { name: 'Motivo: ', value: `${e.message}`, inline: true },)
                     .setFooter({ text: 'Copyright © Supremy Flyff' })
                     .setTimestamp()
                     .setThumbnail(user.displayAvatarURL({ dynamic: true }))], ephemeral: true
