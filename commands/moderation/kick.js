@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits, PermissionsBitField } = require('discord.js');
 const dotenv = require('dotenv');
 dotenv.config();
 const { PUNISHMENTS_CHANNEL } = process.env;
@@ -17,6 +17,10 @@ module.exports = {
 		.setDefaultMemberPermissions(PermissionFlagsBits.KickMembers),
 
 	async execute(interaction) {
+
+		if (!interaction.member.permissions.has(PermissionsBitField.Flags.KickMembers)) {
+			return interaction.reply({ content: 'Você não tem permissão para usar este comando.', ephemeral: true });
+		}
 
 		const user = interaction.options.getMember('usuario');
 		let motivo = interaction.options.getString('motivo');

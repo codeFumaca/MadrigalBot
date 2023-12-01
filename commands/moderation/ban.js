@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits, PermissionsBitField } = require('discord.js');
 const dotenv = require('dotenv');
 dotenv.config();
 const { PUNISHMENTS_CHANNEL } = process.env;
@@ -7,16 +7,21 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('ban')
         .setDescription('Bane um player')
+        .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
         .addUserOption(option =>
             option.setName('usuario')
                 .setDescription('Usuario para ser banido.')
                 .setRequired(true))
         .addStringOption(option =>
             option.setName('motivo')
-                .setDescription('Motivo do banimento.'))
-        .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers),
+                .setDescription('Motivo do banimento.')),
+        
 
     async execute(interaction) {
+
+        if (!interaction.member.permissions.has(PermissionsBitField.Flags.BanMembers)) {
+            return interaction.reply({ content: 'Você não tem permissão para usar este comando.', ephemeral: true });
+        }
 
         const user = interaction.options.getUser('usuario');
         let motivo = interaction.options.getString('motivo');
