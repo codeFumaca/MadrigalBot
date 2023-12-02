@@ -1,10 +1,10 @@
-const { SlashCommandBuilder, EmbedBuilder, PermissionsBitField, ChannelType } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, PermissionsBitField, ChannelType, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
 
 module.exports = {
     cooldown: 20,
     data: new SlashCommandBuilder()
         .setName('embedbuilder')
-        .setDescription('Cria um embed personalizado')
+        .setDescription('Cria um embed personalizado (descrição será solicitada em um modal)')
         .addChannelOption(canal =>
             canal.setName('canal')
                 .setDescription('Canal onde o embed será enviado')
@@ -12,9 +12,6 @@ module.exports = {
         .addStringOption(titulo =>
             titulo.setName('titulo')
                 .setDescription('Título do embed'))
-        .addStringOption(desc =>
-            desc.setName('descrição')
-                .setDescription('Descrição do embed'))
         .addStringOption(thumb =>
             thumb.setName('thumb')
                 .setDescription('Thumbnail do embed'))
@@ -37,9 +34,36 @@ module.exports = {
             return interaction.reply({ content: "O canal selecionado não é um válido!", ephemeral: true })
         };
 
+        const modal = new ModalBuilder()
+            .setCustomId('Embed Builder')
+            .setTitle('Corpo do Embed');
+
+        const descEmbedInput = new TextInputBuilder()
+            .setCustomId('descEmbedInput')
+            .setMaxLength(2048)
+            .setLabel("Qual a descrição do Embed ?")
+            .setPlaceholder('Redija o conteúdo do embed')
+            .setStyle(TextInputStyle.Paragraph);
+
+        const firstActionRow = new ActionRowBuilder().addComponents(descEmbedInput);
+
+        modal.addComponents(firstActionRow);
+
+        await interaction.showModal(modal);
+
+        const modalIteraction = await interaction.awaitModalSubmit({
+            time: 3000000,
+            filter: i => i.user.id === interaction.user.id,
+        }).catch(error => {
+            console.error("Erro ao publicar modal: " + error)
+            return null;
+        })
+        if (!modalIteraction) return interaction.reply({ content: 'Tempo excedido', ephemeral: true });
+
+        const desc = modalIteraction.fields.getTextInputValue('descEmbedInput');
+
         let titulo = interaction.options.getString('titulo');
         let subtitulo = interaction.options.getString('subtitulo');
-        let desc = interaction.options.getString('descrição');
         let thumb = interaction.options.getString('thumb');
         let img = interaction.options.getString('imagem');
 
@@ -58,10 +82,6 @@ module.exports = {
                 .setTitle(titulo)
                 .setFooter({ text: 'Direitos reservados © Flyff Madrigal' })
             ]
-        })
-
-        await interaction.reply({ content: `Embed criado com sucesso!`, ephemeral: true })
-            .catch((error) => console.error(`Erro ao enviar embed: ${error}`));
-
+        }, modalIteraction.reply({ content: "<a:verificado:1136086161136300142> Embed enviado com sucesso! ", ephemeral: true }))
     }
 }
