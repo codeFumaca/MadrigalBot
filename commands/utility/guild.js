@@ -36,6 +36,9 @@ module.exports = {
 					return interaction.reply({ content: 'Você não tem permissão para usar este comando.', ephemeral: true });
 				}
 
+				let guildNameTest = await guildSchema.findOne({ name: guildParam });
+				if (guildNameTest) return interaction.reply({ content: 'Já existe uma guild com este nome.', ephemeral: true });
+
 				await guild.roles.create({
 					name: `${guildParam}`,
 					reason: 'Nova guild criada.',
@@ -49,14 +52,26 @@ module.exports = {
 					name: `${guildParam}`,
 					type: ChannelType.GuildCategory,
 					permissionOverwrites: [
-						{ id: guild.id, deny: [PermissionsBitField.Flags.ViewChannel] },
-						{ id: role, allow: [PermissionsBitField.Flags.ViewChannel] },
+						{ id: guild.id, deny: [PermissionsBitField.Flags.SendMessages, PermissionsBitField.Flags.Connect, PermissionsBitField.Flags.ReadMessageHistory] },
+						{ id: role, allow: [PermissionsBitField.Flags.SendMessages, PermissionsBitField.Flags.Connect, PermissionsBitField.Flags.ReadMessageHistory] },
 					]
 				}).then(CategoryChannel => {
-					guild.channels.create({ name: `Canal de Texto`, type: ChannelType.GuildText, parent: CategoryChannel }).then(channel => {
+					guild.channels.create({ 
+						name: `Canal de Texto`, 
+						type: ChannelType.GuildText, 
+						parent: CategoryChannel,
+						permissionOverwrites: [
+							{ id: guild.id, deny: [PermissionsBitField.Flags.ViewChannel] },
+							{ id: role, allow: [PermissionsBitField.Flags.ViewChannel] },
+						]
+					 }).then(channel => {
 						channel.send(`Bem vindo ao canal de texto da guild ${guildParam}!`);
 					});
-					guild.channels.create({ name: `canal de voz`, type: ChannelType.GuildVoice, parent: CategoryChannel });
+					guild.channels.create({ 
+						name: `canal de voz`, 
+						type: ChannelType.GuildVoice, 
+						parent: CategoryChannel 
+					});
 				});
 				guildSchema.create({
 					name: guildParam,
