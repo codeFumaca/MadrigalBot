@@ -34,7 +34,7 @@ module.exports = {
 					.setColor("Random")
 					.setTitle("Kick! <:kick:1103937833149939802>")
 					.setDescription(`O usuário ${user} foi kickado com sucesso! `)
-					.setFooter({ text: 'Copyright © Supremy Flyff' })
+					.setFooter({ text: 'Copyright © Flyff Madrigal' })
 					.setThumbnail(user.displayAvatarURL({ dynamic: true }))
 					.addFields(
 						{ name: 'Motivo: ', value: `${motivo}`, inline: true },
@@ -51,7 +51,7 @@ module.exports = {
 					.setDescription(`Não foi possível kickar ${user} do servidor!\n*Contate um Administrador e informe o motivo.*`)
 					.addFields(
 						{ name: 'Motivo: ', value: `${e.message}`, inline: true },)
-					.setFooter({ text: 'Copyright © Supremy Flyff' })
+					.setFooter({ text: 'Copyright © Flyff Madrigal' })
 					.setTimestamp()
 					.setThumbnail(user.displayAvatarURL({ dynamic: true }))], ephemeral: true
 			})

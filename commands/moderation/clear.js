@@ -22,7 +22,7 @@ module.exports = {
                         new EmbedBuilder()
                             .setAuthor({ name: "🚫 Error!! 🤖" })
                             .setDescription(`Só consigo deletar de **\`1 a 99\` ** linhas.`)
-                            .setFooter({ text: 'Copyright © Supremy Flyff', iconURL: interaction.guild.iconURL() })
+                            .setFooter({ text: 'Copyright © Flyff Madrigal', iconURL: interaction.guild.iconURL() })
                             .setColor("Random")
                             .setTimestamp()
                             .setThumbnail("https://cdn.discordapp.com/attachments/1101744901449850971/1103193324287967292/error-red-notification.gif")
