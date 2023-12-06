@@ -35,7 +35,7 @@ module.exports = {
                     .setColor("Random")
                     .setTitle("Banimento! <a:BANNED:1103347795412402176>")
                     .setDescription(`O usuário ${user} foi banido com sucesso! `)
-                    .setFooter({ text: 'Copyright © Supremy Flyff' })
+                    .setFooter({ text: 'Copyright © Flyff Madrigal' })
                     .setThumbnail(user.displayAvatarURL({ dynamic: true }))
                     .addFields(
                         { name: 'Motivo: ', value: `${motivo}`, inline: true },
@@ -52,7 +52,7 @@ module.exports = {
                     .setDescription(`Não foi possível banir ${user} do servidor!\n*Contate um Administrador e informe o motivo.*`)
                     .addFields(
                         { name: 'Motivo: ', value: `${e.message}`, inline: true },)
-                    .setFooter({ text: 'Copyright © Supremy Flyff' })
+                    .setFooter({ text: 'Copyright © Flyff Madrigal' })
                     .setTimestamp()
                     .setThumbnail(user.displayAvatarURL({ dynamic: true }))], ephemeral: true
             })
